@@ -12,7 +12,7 @@ license = "EUPL-1.2"
 name = "opentalk-nextcloud-client"
 publish = true
 repository = "https://gitlab.opencode.de/opentalk/libs/opentalk-nextcloud-client"
-version = "0.1.0"
+version = "0.1.1"
 
 [dependencies]
 chrono = "0.4"
