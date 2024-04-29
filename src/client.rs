@@ -2,10 +2,11 @@
 //
 // SPDX-License-Identifier: EUPL-1.2
 
+use std::sync::Arc;
+
 use log::warn;
 use reqwest::StatusCode;
 use reqwest_dav as dav;
-use std::sync::Arc;
 use url::Url;
 
 use crate::{
