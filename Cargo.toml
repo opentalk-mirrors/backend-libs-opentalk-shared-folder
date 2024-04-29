@@ -12,7 +12,7 @@ license = "EUPL-1.2"
 name = "opentalk-nextcloud-client"
 publish = true
 repository = "https://gitlab.opencode.de/opentalk/libs/opentalk-nextcloud-client"
-version = "0.1.1"
+version = "0.2.0"
 
 [dependencies]
 chrono = "0.4"
@@ -33,4 +33,7 @@ tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 default = ["native-tls"]
 native-tls = ["reqwest/native-tls", "reqwest_dav/native-tls"]
 rustls-tls = ["reqwest/rustls-tls", "reqwest_dav/rustls-tls"]
-rustls-tls-native-roots = ["reqwest/rustls-tls-native-roots", "reqwest_dav/rustls-tls-native-roots"]
+rustls-tls-native-roots = [
+  "reqwest/rustls-tls-native-roots",
+  "reqwest_dav/rustls-tls-native-roots",
+]
