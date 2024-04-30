@@ -2,8 +2,7 @@
 //
 // SPDX-License-Identifier: EUPL-1.2
 
-use std::collections::HashSet;
-use std::fmt::Debug;
+use std::{collections::HashSet, fmt::Debug};
 
 use serde::Deserialize;
 
