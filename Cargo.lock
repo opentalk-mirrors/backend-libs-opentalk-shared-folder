@@ -173,6 +173,7 @@ dependencies = [
  "iana-time-zone",
  "js-sys",
  "num-traits",
+ "serde",
  "wasm-bindgen",
  "windows-targets 0.52.5",
 ]
@@ -970,9 +971,9 @@ dependencies = [
 
 [[package]]
 name = "reqwest_dav"
-version = "0.1.11"
+version = "0.1.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a0a080ca4bd035935e98964955697888ef8d40b83b99c57fa7d58f8568a6b89d"
+checksum = "9da969021b9b75feefb603dc68d1e93219ea7ec93b8bceb3ceea577f9e4a940b"
 dependencies = [
  "async-trait",
  "chrono",
