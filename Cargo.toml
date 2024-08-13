@@ -16,7 +16,13 @@ version = "0.2.0"
 
 [dependencies]
 chrono = "0.4"
-derive_more = "0.99"
+derive_more = { version = "1.0", features = [
+  "from",
+  "into",
+  "from_str",
+  "as_ref",
+  "display",
+] }
 log = "0.4"
 reqwest = { version = "0.12", default-features = false, features = ["json"] }
 reqwest_dav = { version = "0.1.11", default-features = false }
