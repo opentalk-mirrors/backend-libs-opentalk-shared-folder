@@ -24,29 +24,6 @@ enum ParameterUpdate {
     Label(String),
 }
 
-#[derive(Default, Debug, Clone, PartialEq, Eq, Serialize)]
-#[serde(rename_all = "camelCase")]
-struct Parameters {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    public_upload: Option<bool>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    password: Option<String>,
-    #[serde(
-        with = "crate::utils::optional_share_permissions",
-        skip_serializing_if = "Option::is_none"
-    )]
-    permissions: Option<HashSet<SharePermission>>,
-    #[serde(
-        with = "crate::utils::optional_naive_date",
-        skip_serializing_if = "Option::is_none"
-    )]
-    expire_date: Option<NaiveDate>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    note: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    label: Option<String>,
-}
-
 #[must_use]
 pub struct ShareUpdater {
     client: Client,
