@@ -28,7 +28,7 @@ reqwest = { version = "0.12", default-features = false, features = ["json"] }
 reqwest_dav = { version = "0.1.11", default-features = false }
 serde = { version = "1", features = ["derive"] }
 snafu = "0.8"
-strum = { version = "0.26", features = ["derive"] }
+strum = { version = "0.27", features = ["derive"] }
 url = "2"
 
 [dev-dependencies]
