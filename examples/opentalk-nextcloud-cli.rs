@@ -115,9 +115,9 @@ async fn main() -> Result<(), Error> {
                 },
         } => {
             let client = Client::new(base_url, username.clone(), password)?;
-            let path = format!("files/{}/{}", username, path);
+            let path = format!("files/{username}/{path}");
             client.create_folder(&path).await?;
-            println!("Created folder {}", path);
+            println!("Created folder {path}");
         }
         Commands::Delete {
             path,
@@ -129,9 +129,9 @@ async fn main() -> Result<(), Error> {
                 },
         } => {
             let client = Client::new(base_url, username.clone(), password)?;
-            let path = format!("files/{}/{}", username, path);
+            let path = format!("files/{username}/{path}");
             client.delete(&path).await?;
-            println!("Deleted {}", path);
+            println!("Deleted {path}");
         }
         Commands::CreateShare {
             path,
@@ -147,7 +147,7 @@ async fn main() -> Result<(), Error> {
             permissions,
         } => {
             let client = Client::new(base_url, username.clone(), password)?;
-            let path = format!("/{}", path);
+            let path = format!("/{path}");
             let mut request = client.create_share(&path, ShareType::PublicLink);
             if let Some(v) = label {
                 request = request.label(v);
@@ -220,7 +220,7 @@ async fn main() -> Result<(), Error> {
         } => {
             let client = Client::new(base_url, username.clone(), password)?;
             client.delete_share(id.clone()).await?;
-            println!("Deleted share {}", id);
+            println!("Deleted share {id}");
         }
     }
 
