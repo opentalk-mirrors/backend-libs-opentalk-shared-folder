@@ -109,7 +109,7 @@ impl Client {
                         warn!("Response for unexpected status code {status_code}:\n{text}");
                     }
                     Err(e) => {
-                        warn!("Error retrieving body from NextCloud: {}", e);
+                        warn!("Error retrieving body from NextCloud: {e}");
                     }
                 }
                 return Err(Error::UnexpectedStatusCode { status_code });
@@ -142,7 +142,7 @@ impl Client {
                         warn!("Response for unexpected status code {status_code}:\n{text}");
                     }
                     Err(e) => {
-                        warn!("Error retrieving body from NextCloud: {}", e);
+                        warn!("Error retrieving body from NextCloud: {e}");
                     }
                 }
                 return Err(Error::UnexpectedStatusCode { status_code });
