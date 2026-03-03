@@ -27,7 +27,7 @@ log = "0.4"
 reqwest = { version = "0.13", features = ["json"] }
 reqwest_dav = "0.3.0"
 serde = { version = "1", features = ["derive"] }
-snafu = "0.8"
+snafu = "0.9"
 strum = { version = "0.27", features = ["derive"] }
 url = "2"
 
