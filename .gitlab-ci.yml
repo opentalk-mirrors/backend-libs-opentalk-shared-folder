@@ -14,6 +14,11 @@ image: git.opentalk.dev:5050/opentalk/backend/containers/rust:1.94.0-trixie
     # Run on scheduled pipeline runs
     - if: $CI_PIPELINE_SOURCE == 'schedule'
 
+include:
+  - project: opentalk/ci/templates/changelog
+    ref: v2
+    file: .gitlab-ci-template.yml
+
 stages:
   - lint
   - test
