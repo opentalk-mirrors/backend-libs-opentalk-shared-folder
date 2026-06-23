@@ -3,11 +3,11 @@
 # SPDX-License-Identifier: EUPL-1.2
 
 [package]
-name = "opentalk-nextcloud-client"
-version = "0.3.0"
 description = "NextCloud client library embedded in OpenTalk"
 documentation = "https://docs.rs/opentalk-nextcloud-client"
+name = "opentalk-nextcloud-client"
 publish = true
+version = "0.3.0"
 
 authors.workspace = true
 edition.workspace = true
@@ -18,11 +18,11 @@ repository.workspace = true
 [dependencies]
 chrono = "0.4"
 derive_more = { version = "2.0", features = [
-  "from",
-  "into",
-  "from_str",
   "as_ref",
   "display",
+  "from",
+  "from_str",
+  "into",
 ] }
 log = "0.4"
 reqwest = { version = "0.13", features = ["json"] }
