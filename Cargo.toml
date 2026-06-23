@@ -1,0 +1,14 @@
+# SPDX-FileCopyrightText: OpenTalk GmbH <mail@opentalk.eu>
+#
+# SPDX-License-Identifier: EUPL-1.2
+
+[workspace]
+members = ["crates/opentalk-nextcloud-client"]
+resolver = "2"
+
+[workspace.package]
+authors = ["OpenTalk Team <mail@opentalk.eu>"]
+edition = "2021"
+homepage = "https://opentalk.eu/"
+license = "EUPL-1.2"
+repository = "https://gitlab.opencode.de/opentalk/libs/opentalk-nextcloud-client"
