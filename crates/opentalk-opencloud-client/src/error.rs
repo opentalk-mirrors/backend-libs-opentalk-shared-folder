@@ -39,4 +39,7 @@ pub enum Error {
 
     #[snafu(display("Server sent unexpected status code: {status_code}"))]
     UnexpectedStatusCode { status_code: StatusCode },
+
+    #[snafu(display("The password policy cannot be satisfied"))]
+    PasswordPolicyUnsatisfiable,
 }

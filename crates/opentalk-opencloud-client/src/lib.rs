@@ -13,6 +13,7 @@ mod error;
 mod item_id;
 mod link_creator;
 mod link_updater;
+mod password;
 mod permission_id;
 mod sharing_link_type;
 
@@ -26,6 +27,6 @@ pub use link_creator::CreateLinkOptions;
 pub use link_updater::LinkUpdater;
 pub use permission_id::PermissionId;
 pub use sharing_link_type::SharingLinkType;
-pub use types::{CreatedShareLink, Drive, DriveItem, Permission, SharingLink};
+pub use types::{CreatedShareLink, Drive, DriveItem, PasswordPolicy, Permission, SharingLink};
 
 type Result<T, E = Error> = std::result::Result<T, E>;

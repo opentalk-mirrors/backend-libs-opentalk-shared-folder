@@ -83,3 +83,51 @@ pub struct CreatedShareLink {
     /// The permission describing the created link.
     pub permission: Permission,
 }
+
+/// The password policy that share-link passwords must conform to, as exposed by
+/// the OCS capabilities endpoint.
+///
+/// When the policy is disabled on the server only `max_characters` is reported;
+/// the remaining minimums then default to `0`.
+#[derive(Debug, Clone, Default, Deserialize)]
+pub struct PasswordPolicy {
+    /// The minimum total number of characters.
+    #[serde(default)]
+    pub min_characters: u32,
+    /// The maximum total number of characters (bytes), usually `72`.
+    #[serde(default)]
+    pub max_characters: Option<u32>,
+    /// The minimum number of lowercase characters.
+    #[serde(default)]
+    pub min_lowercase_characters: u32,
+    /// The minimum number of uppercase characters.
+    #[serde(default)]
+    pub min_uppercase_characters: u32,
+    /// The minimum number of digits.
+    #[serde(default)]
+    pub min_digits: u32,
+    /// The minimum number of special characters.
+    #[serde(default)]
+    pub min_special_characters: u32,
+}
+
+#[derive(Debug, Deserialize)]
+pub(crate) struct OcsCapabilitiesEnvelope {
+    pub ocs: OcsCapabilities,
+}
+
+#[derive(Debug, Deserialize)]
+pub(crate) struct OcsCapabilities {
+    pub data: OcsCapabilitiesData,
+}
+
+#[derive(Debug, Deserialize)]
+pub(crate) struct OcsCapabilitiesData {
+    pub capabilities: Capabilities,
+}
+
+#[derive(Debug, Deserialize)]
+pub(crate) struct Capabilities {
+    #[serde(default)]
+    pub password_policy: Option<PasswordPolicy>,
+}

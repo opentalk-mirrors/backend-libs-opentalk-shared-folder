@@ -122,13 +122,13 @@ allow = []
 # List of crates to deny
 deny = []
 # Certain crates/versions that will be skipped when doing duplicate detection.
-skip = []
+skip = ["cpufeatures@0.2"]
 
 # Similarly to `skip` allows you to skip certain crates during duplicate
 # detection. Unlike skip, it also includes the entire tree of transitive
 # dependencies starting at the specified crate, up to a certain depth, which is
 # by default infinite
-skip-tree = []
+skip-tree = ["rand@0.8"]
 
 # This section is considered when running `cargo deny check sources`.
 # More documentation about the 'sources' section can be found here:

@@ -26,11 +26,15 @@ cargo run --example opentalk-opencloud-cli -- list-drives
 cargo run --example opentalk-opencloud-cli -- \
   create-folder "$DRIVE_ID" "Meetings/2026"
 
+# Inspect the share-link password policy, or generate a conforming password
+cargo run --example opentalk-opencloud-cli -- password-policy
+PASSWORD=$(cargo run --quiet --example opentalk-opencloud-cli -- generate-password)
+
 # Create a public read-only share link for the folder
 cargo run --example opentalk-opencloud-cli -- \
   create-link "$DRIVE_ID" "Meetings/2026" \
   --link-type view \
-  --password "s3cret" \
+  --password "$PASSWORD" \
   --expiration 2026-12-31T23:59:59Z
 
 # Update an existing link (one property per invocation)
@@ -47,3 +51,7 @@ cargo run --example opentalk-opencloud-cli -- \
 Valid `--link-type` values are `internal`, `view`, `upload`, `edit`,
 `createOnly` and `blocksDownload` (`upload` and `createOnly` only apply to
 folders).
+
+Share-link passwords must conform to the server's password policy (queried from
+`/ocs/v1.php/cloud/capabilities`). Use the library's `generate_password` to
+obtain a conforming password, or `get_password_policy` to inspect the rules.

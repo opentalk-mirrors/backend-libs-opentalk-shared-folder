@@ -34,6 +34,16 @@ enum Commands {
         #[command(flatten)]
         opencloud: OpenCloudParameters,
     },
+    /// Print the share-link password policy reported by the server
+    PasswordPolicy {
+        #[command(flatten)]
+        opencloud: OpenCloudParameters,
+    },
+    /// Generate a password that conforms to the server's password policy
+    GeneratePassword {
+        #[command(flatten)]
+        opencloud: OpenCloudParameters,
+    },
     /// Create a folder in a drive on the OpenCloud instance
     CreateFolder {
         /// Identifier of the drive the folder should be created in
@@ -145,6 +155,15 @@ async fn main() -> Result<(), Error> {
             for drive in client.get_drives().await? {
                 println!("{}\t{}\t{}", drive.id, drive.drive_type, drive.name);
             }
+        }
+        Commands::PasswordPolicy { opencloud } => {
+            let client = Client::new(opencloud.base_url, opencloud.username, opencloud.password)?;
+            let policy = client.get_password_policy().await?;
+            println!("{policy:#?}");
+        }
+        Commands::GeneratePassword { opencloud } => {
+            let client = Client::new(opencloud.base_url, opencloud.username, opencloud.password)?;
+            println!("{}", client.generate_password().await?);
         }
         Commands::CreateFolder {
             drive_id,

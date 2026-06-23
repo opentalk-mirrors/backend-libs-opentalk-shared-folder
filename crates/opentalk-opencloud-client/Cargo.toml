@@ -20,6 +20,7 @@ derive_more.workspace = true
 futures.workspace = true
 log.workspace = true
 percent-encoding.workspace = true
+rand.workspace = true
 reqwest.workspace = true
 serde.workspace = true
 snafu.workspace = true

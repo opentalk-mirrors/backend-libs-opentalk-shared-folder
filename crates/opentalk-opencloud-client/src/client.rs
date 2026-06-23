@@ -12,7 +12,10 @@ use url::Url;
 
 use crate::{
     link_creator::CreateLinkBody,
-    types::{CreatedShareLink, Drive, DriveItem, DriveItemList, DriveList, Permission},
+    types::{
+        CreatedShareLink, Drive, DriveItem, DriveItemList, DriveList, OcsCapabilitiesEnvelope,
+        PasswordPolicy, Permission,
+    },
     CreateLinkOptions, DriveId, Error, ItemId, LinkUpdater, PermissionId, Result,
 };
 
@@ -138,6 +141,34 @@ impl Client {
         let response = error_for_status(response).await?;
         let drive: Drive = response.json().await?;
         Ok(drive)
+    }
+
+    /// Returns the password policy that share-link passwords must conform to,
+    /// queried from the OCS capabilities endpoint.
+    pub async fn get_password_policy(&self) -> Result<PasswordPolicy> {
+        let url = self.capabilities_url()?;
+        let response = self
+            .inner
+            .http_client
+            .get(url)
+            .basic_auth(&self.inner.username, Some(&self.inner.password))
+            .send()
+            .await?;
+        let response = error_for_status(response).await?;
+        let envelope: OcsCapabilitiesEnvelope = response.json().await?;
+        Ok(envelope
+            .ocs
+            .data
+            .capabilities
+            .password_policy
+            .unwrap_or_default())
+    }
+
+    /// Generates a random password that conforms to the server's password
+    /// policy, suitable for protecting a share link.
+    pub async fn generate_password(&self) -> Result<String> {
+        let policy = self.get_password_policy().await?;
+        crate::password::generate(&policy)
     }
 
     /// Creates a folder at `path` inside the drive `drive_id`.
@@ -319,6 +350,13 @@ impl Client {
     fn graph_url(&self, version: &str, suffix: &str) -> Result<Url> {
         let base = self.base_url_str();
         Ok(Url::parse(&format!("{base}/graph/{version}/{suffix}"))?)
+    }
+
+    fn capabilities_url(&self) -> Result<Url> {
+        let base = self.base_url_str();
+        Ok(Url::parse(&format!(
+            "{base}/ocs/v1.php/cloud/capabilities?format=json"
+        ))?)
     }
 
     fn dav_url(&self, drive_id: &DriveId, path: &str) -> Result<Url> {
