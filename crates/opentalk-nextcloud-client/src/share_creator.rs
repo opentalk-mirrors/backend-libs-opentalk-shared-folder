@@ -10,7 +10,7 @@ use reqwest::StatusCode;
 use serde::Serialize;
 
 use crate::{
-    types::{OcsShareAnswer, OcsShareData, ShareAnswer},
+    types::{OcsShareData, OcsShareResponse, ShareResponse},
     Client, Error, Result, SharePermission, ShareType,
 };
 
@@ -91,7 +91,7 @@ impl ShareCreator {
         self
     }
 
-    pub async fn send(self) -> Result<OcsShareAnswer<OcsShareData>> {
+    pub async fn send(self) -> Result<OcsShareResponse<OcsShareData>> {
         let Self { client, parameters } = self;
 
         let url = client.share_api_base_url()?.join("shares")?;
@@ -101,9 +101,9 @@ impl ShareCreator {
             .post(url)
             .basic_auth(&client.inner.username, Some(&client.inner.password))
             .json(&parameters);
-        let answer = request.send().await?;
+        let response = request.send().await?;
 
-        match answer.status() {
+        match response.status() {
             StatusCode::CONTINUE | StatusCode::OK => {}
             StatusCode::BAD_REQUEST => {
                 // 400
@@ -123,7 +123,7 @@ impl ShareCreator {
             }
             status_code => {
                 warn!("Received unexpected status code {status_code} from NextCloud server.");
-                match answer.text().await {
+                match response.text().await {
                     Ok(text) => {
                         warn!("Response for unexpected status code {status_code}:\n{text}");
                     }
@@ -134,7 +134,7 @@ impl ShareCreator {
                 return Err(Error::UnexpectedStatusCode { status_code });
             }
         }
-        let answer: ShareAnswer<OcsShareData> = answer.json().await?;
-        Ok(answer.ocs)
+        let response: ShareResponse<OcsShareData> = response.json().await?;
+        Ok(response.ocs)
     }
 }

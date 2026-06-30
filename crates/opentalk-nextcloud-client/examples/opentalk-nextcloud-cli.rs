@@ -161,10 +161,10 @@ async fn main() -> Result<(), Error> {
             for v in permissions.into_iter().flatten() {
                 request = request.permission(v);
             }
-            let answer = request.send().await?;
+            let response = request.send().await?;
             println!(
                 "Created share {} at {} for path {}",
-                answer.data.id, answer.data.url, answer.data.file_target
+                response.data.id, response.data.url, response.data.file_target
             );
         }
         Commands::UpdateShare {
@@ -184,28 +184,28 @@ async fn main() -> Result<(), Error> {
             let request = client.update_share(id);
 
             if let Some(v) = label {
-                let answer = request.label(v).await?;
+                let response = request.label(v).await?;
                 println!(
                     "Updated label for share {} at {} for path {}",
-                    answer.data.id, answer.data.url, answer.data.file_target
+                    response.data.id, response.data.url, response.data.file_target
                 );
             } else if let Some(v) = expire_date {
-                let answer = request.expire_date(Some(v)).await?;
+                let response = request.expire_date(Some(v)).await?;
                 println!(
                     "Updated expire date for share {} at {} for path {}",
-                    answer.data.id, answer.data.url, answer.data.file_target
+                    response.data.id, response.data.url, response.data.file_target
                 );
             } else if remove_expire_date {
-                let answer = request.expire_date(None).await?;
+                let response = request.expire_date(None).await?;
                 println!(
                     "Removed expire date for share {} at {} for path {}",
-                    answer.data.id, answer.data.url, answer.data.file_target
+                    response.data.id, response.data.url, response.data.file_target
                 );
             } else if let Some(v) = permissions {
-                let answer = request.permissions(HashSet::from_iter(v)).await?;
+                let response = request.permissions(HashSet::from_iter(v)).await?;
                 println!(
                     "Updated permissions for share {} at {} for path {}",
-                    answer.data.id, answer.data.url, answer.data.file_target
+                    response.data.id, response.data.url, response.data.file_target
                 );
             }
         }

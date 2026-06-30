@@ -9,12 +9,12 @@ use serde::Deserialize;
 use crate::{ShareId, SharePermission};
 
 #[derive(Debug, Deserialize)]
-pub struct ShareAnswer<D: Debug> {
-    pub ocs: OcsShareAnswer<D>,
+pub struct ShareResponse<D: Debug> {
+    pub ocs: OcsShareResponse<D>,
 }
 
 #[derive(Debug, Deserialize)]
-pub struct OcsShareAnswer<D: Debug> {
+pub struct OcsShareResponse<D: Debug> {
     pub meta: Meta,
     pub data: D,
 }
