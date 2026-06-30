@@ -10,7 +10,7 @@ use reqwest_dav as dav;
 use url::Url;
 
 use crate::{
-    types::{OcsPassword, ShareAnswer},
+    types::{OcsPassword, ShareResponse},
     Error, Result, ShareCreator, ShareId, ShareType, ShareUpdater,
 };
 
@@ -90,9 +90,9 @@ impl Client {
             .http_client
             .delete(url)
             .basic_auth(&self.inner.username, Some(&self.inner.password));
-        let answer = request.send().await?;
+        let response = request.send().await?;
 
-        match answer.status() {
+        match response.status() {
             StatusCode::CONTINUE | StatusCode::OK => {}
             StatusCode::UNAUTHORIZED => {
                 // 401
@@ -104,7 +104,7 @@ impl Client {
             }
             status_code => {
                 warn!("Received unexpected status code {status_code} from NextCloud server.");
-                match answer.text().await {
+                match response.text().await {
                     Ok(text) => {
                         warn!("Response for unexpected status code {status_code}:\n{text}");
                     }
@@ -127,9 +127,9 @@ impl Client {
             .get(url)
             .basic_auth(&self.inner.username, Some(&self.inner.password));
 
-        let answer = request.send().await?;
+        let response = request.send().await?;
 
-        match answer.status() {
+        match response.status() {
             StatusCode::CONTINUE | StatusCode::OK => {}
             StatusCode::UNAUTHORIZED => {
                 // 401
@@ -137,7 +137,7 @@ impl Client {
             }
             status_code => {
                 warn!("Received unexpected status code {status_code} from NextCloud server.");
-                match answer.text().await {
+                match response.text().await {
                     Ok(text) => {
                         warn!("Response for unexpected status code {status_code}:\n{text}");
                     }
@@ -149,9 +149,9 @@ impl Client {
             }
         }
 
-        let answer: ShareAnswer<OcsPassword> = answer.json().await?;
+        let response: ShareResponse<OcsPassword> = response.json().await?;
 
-        Ok(answer.ocs.data.password)
+        Ok(response.ocs.data.password)
     }
 
     pub(crate) fn password_policy_base_url(&self) -> Result<Url> {
