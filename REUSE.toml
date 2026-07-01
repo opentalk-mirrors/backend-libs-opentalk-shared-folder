@@ -11,6 +11,7 @@ version = 1
 SPDX-FileCopyrightText = "OpenTalk GmbH <mail@opentalk.eu>"
 SPDX-License-Identifier = "EUPL-1.2"
 path = [
+  "**/CHANGELOG.md",
   "**/README.md",
   ".commitlintrc.json",
   ".mdlrc",
