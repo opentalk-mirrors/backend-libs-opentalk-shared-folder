@@ -32,23 +32,18 @@ _check_opentalk_git_cliff:
         exit 1
     fi
 
-# Prepare a release
-prepare-release VERSION: (set-version VERSION) update-openapi (update-changelog VERSION)
+# Prepare a release for a single crate
+prepare-release CRATE VERSION: (set-version CRATE VERSION) (update-changelog CRATE VERSION)
 
-# Sets the version in the Cargo.toml and updates the Cargo.lock
-set-version VERSION: _check_cargo_set_version
-    # Set the version number for all packages in the workspace
-    cargo set-version --workspace {{ VERSION }} --exclude xtask
+# Sets the version in the crate's Cargo.toml and updates the Cargo.lock
+set-version CRATE VERSION: _check_cargo_set_version
+    # Set the version number for the specified package
+    cargo set-version --package {{ CRATE }} {{ VERSION }}
     # Regenerate the lockfile
     cargo check
 
-# Update the version in the OpenAPI spec
-update-openapi:
-    # Update OpenAPI specification (which contains the version number)
-    cargo run -- -c example/controller.toml openapi dump > docs/developer/api.yaml
-
-# Update the changelog
-update-changelog VERSION: _check_opentalk_git_cliff
+# Update the changelog for a single crate
+update-changelog CRATE VERSION: _check_opentalk_git_cliff
     #!/usr/bin/env bash
 
     if [ -z "$GITLAB_TOKEN" ] && [ -f "$HOME/.gitlab_token" ]; then
@@ -58,17 +53,19 @@ update-changelog VERSION: _check_opentalk_git_cliff
     # Update Changelog
     GITLAB_TOKEN=$GITLAB_TOKEN \
     GITLAB_API_URL=https://git.opentalk.dev/api/v4 \
-    GITLAB_REPO=opentalk/backend/services/controller \
+    GITLAB_REPO=opentalk/backend/libs/opentalk-shared-folder \
     opentalk-git-cliff \
         --use-branch-tags \
         --unreleased \
-        --tag "v{{ VERSION }}" \
-        --prepend CHANGELOG.md
+        --include-path "crates/{{ CRATE }}/**" \
+        --tag-pattern "{{ CRATE }}-v.*" \
+        --tag "{{ CRATE }}-v{{ VERSION }}" \
+        --prepend crates/{{ CRATE }}/CHANGELOG.md
 
-# Create the release commit
-commit-release: _check_yq
+# Create the release commit for a single crate
+commit-release CRATE: _check_yq
     #!/usr/bin/env bash
     set -eu -o pipefail
-    VERSION=$(cat Cargo.toml | yq -ptoml ".workspace.package.version")
-    git commit -a -m "chore(release): prepare release ${VERSION}"
+    VERSION=$(cat crates/{{ CRATE }}/Cargo.toml | yq -ptoml ".package.version")
+    git commit -a -m "chore(release): prepare {{ CRATE }} release ${VERSION}"
     git log HEAD^..HEAD
