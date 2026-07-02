@@ -32,6 +32,15 @@ _check_opentalk_git_cliff:
         exit 1
     fi
 
+[no-exit-message]
+_check_glab:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if ! command -v glab > /dev/null; then
+        echo 'glab is not available, see https://gitlab.com/gitlab-org/cli' >&2
+        exit 1
+    fi
+
 # Prepare a release for a single crate
 prepare-release CRATE VERSION: (set-version CRATE VERSION) (update-changelog CRATE VERSION)
 
@@ -69,3 +78,29 @@ commit-release CRATE: _check_yq
     VERSION=$(cat crates/{{ CRATE }}/Cargo.toml | yq -ptoml ".package.version")
     git commit -a -m "chore(release): prepare {{ CRATE }} release ${VERSION}"
     git log HEAD^..HEAD
+
+# Create the release tag for a single crate
+tag-release CRATE: _check_yq
+    #!/usr/bin/env bash
+    set -eu -o pipefail
+    VERSION=$(cat crates/{{ CRATE }}/Cargo.toml | yq -ptoml ".package.version")
+    TAG="{{ CRATE }}-v${VERSION}"
+    git tag -s -m "$TAG" "$TAG"
+    git show --no-patch "$TAG"
+
+# Create a GitLab release from the current version tag for a single crate
+create-release CRATE: _check_yq _check_glab
+    #!/usr/bin/env bash
+    set -euo pipefail
+    VERSION=$(cat crates/{{ CRATE }}/Cargo.toml | yq -ptoml ".package.version")
+    TAG="{{ CRATE }}-v${VERSION}"
+
+    # Extract the changelog section for this version
+    notes=$(awk "/^## \\[$TAG\\]/{found=1; next} /^## \\[/{if(found) exit} /^\\[$TAG\\]:/{next} found{print}" crates/{{ CRATE }}/CHANGELOG.md)
+
+    if [ -z "$notes" ]; then
+        echo "No changelog entry found for version $TAG" >&2
+        exit 1
+    fi
+
+    glab release create "$TAG" --notes "$notes"
